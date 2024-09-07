@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import VueCookies from 'vue-cookies'
+import '@/styles/global.scss'
 
-Vue.config.productionTip = false
+
+Vue.use(VueCookies);
 
 new Vue({
   router,
-  render: function (h) { return h(App) }
+  render: h => h(App)
 }).$mount('#app')
