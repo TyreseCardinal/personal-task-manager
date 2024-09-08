@@ -3,46 +3,38 @@
     <h1>Create Task</h1>
     <form @submit.prevent="createTask">
       <input v-model="title" placeholder="Task title" required />
-      <label>
-        <input type="checkbox" v-model="completed" />
-        Completed
-      </label>
+      <select v-model="priority" required>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+      </select>
       <button type="submit">Create Task</button>
     </form>
   </div>
 </template>
 
 <script>
-import axios from 'axios'; // Make sure to import axios
+import axios from 'axios';
 
 export default {
   data() {
     return {
       title: '',
-      completed: false, // Initialize completed property
+      priority: 'Low',  // Default priority
     };
   },
   methods: {
     async createTask() {
       try {
-        // Make POST request to create a new task
-        const response = await axios.post('http://localhost:5000/api/tasks', {
+        await axios.post('http://localhost:5000/api/tasks', {
           title: this.title,
-          completed: this.completed, // Send the completed status
+          priority: this.priority,  // Send priority to the backend
+          completed: false
         });
-
-        // Optionally handle the response
-        console.log('Task created:', response.data);
-
-        // Redirect to the task list page
       } catch (error) {
-        console.error('Error creating task:', error);
+        console.error(error);
       }
-    },
-  },
+    }
+  }
 };
 </script>
-
-<style scoped>
-/* Your SCSS here */
-</style>
