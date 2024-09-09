@@ -21,9 +21,13 @@ export default {
     };
   },
   methods: {
-    async fetchTasks() {
+    fetchTasks() {
       try {
-        const response = axios.get('http://localhost:5000/api/tasks');
+        const response = axios.get('http://localhost:5000/api/tasks', {
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        });
         this.tasks = response.data;
       } catch (error) {
         console.error(error);
