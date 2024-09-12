@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -29,35 +29,73 @@ export default {
       username: '',
       email: '',
       password: '',
-      message: '',
+      registrationSuccessful: false, // Added flag
     };
   },
+  computed: {
+    ...mapGetters(['message']),
+  },
+  watch: {
+    registrationSuccessful(newValue) {
+      if (newValue) {
+        this.$router.push('/login');
+      }
+    },
+  },
   methods: {
+    ...mapActions(['register']),
     async register() {
       try {
-        const response = await axios.post('/auth/register', {
+        await this.register({
           username: this.username,
           email: this.email,
           password: this.password,
         });
-        this.message = response.data.message;
+        // Navigate to login or home page upon successful registration
+        this.$router.push('/').catch(err => {
+          if (err.name !== 'NavigationDuplicated') {
+            console.error('Navigation error:', err);
+          }
+        });
       } catch (error) {
-        this.message = error.response.data.message || 'Registration failed.';
+        console.error("Registration error:", error);
       }
     },
   },
 };
 </script>
 
+
 <style scoped>
 .register-container {
-  max-width: 400px;
+  max-width: 600px;
   margin: auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
 .form-group {
   margin-bottom: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #00334E;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005b8f;
+}
+
+p {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
 }
 </style>

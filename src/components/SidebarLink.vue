@@ -12,19 +12,16 @@
 <script>
 import svgIconVue from '@jamescoyle/vue-icon';
 import '@/styles/scss/global.scss';
-import { collapsed } from './state'; // Assuming collapsed is a shared state
+import { mapState } from 'vuex'; // Use mapState to access Vuex state
 
 export default {
   props: {
     to: { type: String, required: true },
     icon: { type: String, required: true },
   },
-  data() {
-    return {
-      collapsed, // Vue 2 uses data instead of setup for state
-    };
-  },
   computed: {
+    ...mapState(['collapsed']), // Use mapState to access the 'collapsed' state
+
     isActive() {
       return this.$route.path === this.to; // Access the route with this.$route in Vue 2
     },
@@ -34,6 +31,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .fade-enter-active,

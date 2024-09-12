@@ -1,51 +1,41 @@
 <template>
   <div class="login-container">
     <h2>Login</h2>
-    <form @submit.prevent="login">
+    <form @submit.prevent="handleLogin">
       <div class="form-group">
-        <label for="email">Email:</label>
-        <input v-model="email" type="email" id="email" required />
+        <input v-model="username" type="text" placeholder="Username" required />
       </div>
       <div class="form-group">
-        <label for="password">Password:</label>
-        <input v-model="password" type="password" id="password" required />
+        <input v-model="password" type="password" placeholder="Password" required />
       </div>
       <button type="submit">Login</button>
+      <p v-if="errorMessage">{{ errorMessage }}</p>
     </form>
-    <p v-if="message">{{ message }}</p>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import { mapActions } from 'vuex';
 
 export default {
   data() {
     return {
-      email: '',
+      username: '',
       password: '',
-      message: '',
+      errorMessage: ''
     };
   },
   methods: {
-    async login() {
+    ...mapActions(['login']),
+    async handleLogin() {
       try {
-        const response = await axios.post('http://localhost:5000/auth/login', {
-          email: this.email,
-          password: this.password,
-        });
-        const token = response.data.access_token;
-
-        // Save the token in local storage or cookies (simplified example)
-        localStorage.setItem('token', token);
-
-        this.message = 'Login successful!';
-        this.$router.push('/tasks'); // Redirect to the tasks page after login
+        await this.login({ username: this.username, password: this.password });
+        this.$router.push({ name: 'HomeView' }); // Navigate to homepage on successful login
       } catch (error) {
-        this.message = error.response.data.message || 'Login failed.';
+        this.errorMessage = 'Invalid credentials. Please try again.';
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -60,5 +50,25 @@ export default {
 
 .form-group {
   margin-bottom: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #00334E;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005b8f;
+}
+
+p {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
 }
 </style>

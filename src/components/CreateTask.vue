@@ -1,3 +1,4 @@
+// src/components/CreateTask.vue
 <template>
   <div>
     <h1>Create Task</h1>
@@ -14,27 +15,24 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { mapActions } from 'vuex';
 
 export default {
   data() {
     return {
       title: '',
-      priority: 'Low',  // Default priority
+      priority: 'Low',
     };
   },
   methods: {
+    ...mapActions(['createTask']),
     async createTask() {
-      try {
-        await axios.post('http://localhost:5000/api/tasks', {
-          title: this.title,
-          priority: this.priority,  // Send priority to the backend
-          completed: false
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
+      await this.createTask({
+        title: this.title,
+        priority: this.priority,
+        completed: false,
+      });
+    },
+  },
 };
 </script>

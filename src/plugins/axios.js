@@ -1,24 +1,49 @@
-// axios.js
+// src/plugins/axios.js
 import axios from 'axios';
-import store from './store'; // Import your Vuex store
 
-// Create an Axios instance
-const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000', // Base URL of your API
+// Create a custom Axios instance
+const instance = axios.create({
+  baseURL: 'http://localhost:5000/api', // Set your base API URL here
+  timeout: 10000, // Optional: Set a request timeout in milliseconds
+  headers: {
+    'Content-Type': 'application/json', // Optional: Default Content-Type
+  },
 });
 
-// Add a request interceptor to attach the token to requests
-axiosInstance.interceptors.request.use(
+// Request interceptor to include JWT token in headers
+instance.interceptors.request.use(
   (config) => {
-    const token = store.state.token;
+    // Get the token from localStorage
+    const token = localStorage.getItem('token');
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`; // Attach token to header
+      config.headers['Authorization'] = `Bearer ${token}`; // Set Authorization header
     }
     return config;
   },
   (error) => {
+    // Handle request errors
     return Promise.reject(error);
   }
 );
 
-export default axiosInstance;
+// Response interceptor to handle responses globally
+instance.interceptors.response.use(
+  (response) => {
+    // Handle successful responses
+    return response;
+  },
+  (error) => {
+    // Handle errors globally
+    if (error.response && error.response.status === 401) {
+      // Example: Handle unauthorized access
+      console.error('Unauthorized access - please log in again.');
+      // Handle token refresh logic or redirection if needed
+    } else if (error.response && error.response.status === 500) {
+      // Example: Handle server errors
+      console.error('Server error - please try again later.');
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default instance;

@@ -1,3 +1,4 @@
+// src/components/TaskList.vue
 <template>
   <div>
     <h1>Task List</h1>
@@ -12,38 +13,17 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  data() {
-    return {
-      tasks: [],
-    };
+  computed: {
+    ...mapGetters(['tasks']),
   },
   methods: {
-    fetchTasks() {
-      try {
-        const response = axios.get('http://localhost:5000/api/tasks', {
-          headers: {
-            'Authorization': 'Bearer '
-          }
-        });
-        this.tasks = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    async deleteTask(taskId) {
-      try {
-        await axios.delete(`http://localhost:5000/api/tasks/${taskId}`);
-        this.fetchTasks();
-      } catch (error) {
-        console.error(error);
-      }
-    }
+    ...mapActions(['fetchTasks', 'deleteTask']),
   },
   created() {
     this.fetchTasks();
-  }
+  },
 };
 </script>
