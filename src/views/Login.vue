@@ -1,38 +1,45 @@
 <template>
   <div class="login-container">
-    <h2>Login</h2>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <input v-model="username" type="text" placeholder="Username" required />
-      </div>
-      <div class="form-group">
-        <input v-model="password" type="password" placeholder="Password" required />
-      </div>
+    <h1>Login</h1>
+    <form @submit.prevent="login">
+      <input v-model="email" type="email" placeholder="Email" />
+      <input v-model="password" type="password" placeholder="Password" />
       <button type="submit">Login</button>
-      <p v-if="errorMessage">{{ errorMessage }}</p>
     </form>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import axios from '@/plugins/axios';
+import VueCookies from 'vue-cookies';
 
 export default {
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
-      errorMessage: ''
     };
   },
   methods: {
-    ...mapActions(['login']),
-    async handleLogin() {
+    async login() {
       try {
-        await this.login({ username: this.username, password: this.password });
-        this.$router.push({ name: 'HomeView' }); // Navigate to homepage on successful login
+        const response = await axios.post('/auth/login', {
+          email: this.email,
+          password: this.password
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.status === 200) {
+          console.log('Login Successful');
+          VueCookies.set('access_token', response.data.token); // Correctly set token in cookies
+          this.$router.push('/'); // Redirect to home
+        }
       } catch (error) {
-        this.errorMessage = 'Invalid credentials. Please try again.';
+        alert('Invalid credentials');
+        console.log(error);
       }
     }
   }
@@ -46,10 +53,6 @@ export default {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.form-group {
-  margin-bottom: 15px;
 }
 
 button {

@@ -34,50 +34,56 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import axios from '@/plugins/axios';
 
 export default {
   data() {
     return {
       updateEmail: '',
       updatePassword: '',
+      message: '',
+      uploadMessage: ''
     };
   },
-  computed: {
-    ...mapGetters(['message', 'uploadMessage']),
-  },
   methods: {
-    ...mapActions([
-      'uploadProfilePicture',
-      'updateUser',
-      'deleteAccount'
-    ]),
-    handleFileUpload(event) {
+    async handleFileUpload(event) {
       const file = event.target.files[0];
       if (file) {
-        this.uploadProfilePicture(file);
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+          await axios.post('/users/profile-picture', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          this.uploadMessage = 'Profile picture uploaded successfully!';
+        } catch (error) {
+          this.uploadMessage = 'Failed to upload profile picture.';
+        }
       }
     },
     async updateUser() {
       try {
-        await this.updateUser({
+        await axios.put('/users/update', {
           email: this.updateEmail,
-          password: this.updatePassword
+          password: this.updatePassword,
         });
+        this.message = 'User information updated successfully!';
       } catch (error) {
-        console.error("Update error:", error);
         this.message = 'Update failed.';
       }
     },
     async deleteAccount() {
       try {
-        await this.deleteAccount();
+        await axios.delete('/users/delete');
+        this.message = 'Account deleted successfully.';
+        this.$router.push('/login');
       } catch (error) {
-        console.error("Delete error:", error);
         this.message = 'Account deletion failed.';
       }
     }
-  },
+  }
 };
 </script>
 
@@ -88,10 +94,6 @@ export default {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.form-group {
-  margin-bottom: 15px;
 }
 
 button {

@@ -1,4 +1,3 @@
-// src/components/CreateTask.vue
 <template>
   <div>
     <h1>Create Task</h1>
@@ -15,7 +14,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import axios from 'axios';
 
 export default {
   data() {
@@ -25,13 +24,23 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['createTask']),
     async createTask() {
-      await this.createTask({
-        title: this.title,
-        priority: this.priority,
-        completed: false,
-      });
+      try {
+        await axios.post('/api/tasks', {
+          title: this.title,
+          priority: this.priority,
+          completed: false,
+        }, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.title = '';
+        this.priority = 'Low';
+        this.$router.push('/tasks'); // Redirect to task list after creation
+      } catch (error) {
+        console.error('Error creating task:', error);
+      }
     },
   },
 };

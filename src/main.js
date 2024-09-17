@@ -1,18 +1,16 @@
 import Vue from 'vue';
 import App from './App.vue';
-import router from './router'; // Ensure the path is correct
-import store from '@/plugins/store';
+import router from './router/index'; // Ensure the path is correct
 import VueCookies from 'vue-cookies';
-import SvgIcon from '@jamescoyle/vue-icon';
-import axios from '@/plugins/axios';
+import '@mdi/font/css/materialdesignicons.css';
+
+import '@/styles/scss/global.scss';
 
 Vue.use(VueCookies);
-Vue.component('SvgIcon', SvgIcon);
 
 Vue.config.productionTip = false;
 
 new Vue({
-  router, // Make sure router is included
-  store,
+  router,
   render: (h) => h(App),
 }).$mount('#app');

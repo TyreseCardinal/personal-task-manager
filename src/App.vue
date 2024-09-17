@@ -1,20 +1,51 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <Sidebar v-if="!isLoginPage" :collapsed="sidebarCollapsed" @toggle="toggleSidebar" />
+    <div :class="['main-content', { 'content-expanded': !sidebarCollapsed && !isLoginPage }]">
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
+import '@mdi/font/css/materialdesignicons.css';
+import Sidebar from '@/components/Sidebar.vue';
+
 export default {
-  name: 'App',
+  components: {
+    Sidebar
+  },
+  data() {
+    return {
+      sidebarCollapsed: true
+    };
+  },
+  computed: {
+    isLoginPage() {
+      return this.$route.path === '/login';
+    }
+  },
+  methods: {
+    toggleSidebar() {
+      this.sidebarCollapsed = !this.sidebarCollapsed;
+    }
+  }
 };
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  display: flex;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.main-content {
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
 }
 </style>

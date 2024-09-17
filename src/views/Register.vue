@@ -1,27 +1,18 @@
 <template>
-  <div class="register-container">
-    <h2>Register</h2>
+  <div>
+    <h1>Register</h1>
     <form @submit.prevent="register">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input v-model="username" type="text" id="username" required />
-      </div>
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input v-model="email" type="email" id="email" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input v-model="password" type="password" id="password" required />
-      </div>
+      <input v-model="username" type="text" placeholder="Username" />
+      <input v-model="email" type="email" placeholder="Email" />
+      <input v-model="password" type="password" placeholder="Password" />
       <button type="submit">Register</button>
     </form>
-    <p v-if="message">{{ message }}</p>
+    <p>{{ message }}</p>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import axios from '@/plugins/axios';
 
 export default {
   data() {
@@ -29,42 +20,26 @@ export default {
       username: '',
       email: '',
       password: '',
-      registrationSuccessful: false, // Added flag
+      message: ''
     };
   },
-  computed: {
-    ...mapGetters(['message']),
-  },
-  watch: {
-    registrationSuccessful(newValue) {
-      if (newValue) {
-        this.$router.push('/login');
-      }
-    },
-  },
   methods: {
-    ...mapActions(['register']),
     async register() {
       try {
-        await this.register({
+        const response = await axios.post('/auth/register', {
           username: this.username,
           email: this.email,
           password: this.password,
         });
-        // Navigate to login or home page upon successful registration
-        this.$router.push('/').catch(err => {
-          if (err.name !== 'NavigationDuplicated') {
-            console.error('Navigation error:', err);
-          }
-        });
+        this.message = response.data.message;
+        this.$router.push('/login');
       } catch (error) {
-        console.error("Registration error:", error);
+        this.message = error.response.data.message || 'Registration failed.';
       }
-    },
-  },
+    }
+  }
 };
 </script>
-
 
 <style scoped>
 .register-container {
@@ -73,10 +48,6 @@ export default {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.form-group {
-  margin-bottom: 15px;
 }
 
 button {

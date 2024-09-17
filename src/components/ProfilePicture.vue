@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       selectedFile: null,
-      uploadMessage: ''
+      uploadMessage: '',
     };
   },
   methods: {
@@ -43,7 +43,7 @@ export default {
       } catch (error) {
         this.uploadMessage = error.response.data.message || 'Upload failed. Please try again.';
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -1,46 +1,63 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import store from '@/plugins/store';
-import TaskList from '@/components/TaskList.vue';
-import CreateTask from '@/components/CreateTask.vue';
-import SidebarLink from '@/components/SidebarLink.vue';
-import SideBar from '@/components/SideBar.vue';
 import HomeView from '@/views/HomeView.vue';
 import Login from '@/views/Login.vue';
-import Register from '@/views/Register.vue';
 import Profile from '@/views/Profile.vue';
+import Register from '@/views/Register.vue';
 
 Vue.use(Router);
 
 const router = new Router({
-  mode: 'history',
+  mode: 'history', // Use 'history' mode for cleaner URLs (optional)
   routes: [
-    { path: '/', name: 'HomeView', component: HomeView, meta: { requiresAuth: true } },
-    { path: '/task', name: 'TaskList', component: TaskList, meta: { requiresAuth: true } },
-    { path: '/create', name: 'CreateTask', component: CreateTask, meta: { requiresAuth: true } },
-    { path: '/login', name: 'Login', component: Login },
-    { path: '/register', name: 'Register', component: Register },
-    { path: '/profile', name: 'Profile', component: Profile },
-    { path: '/sidebar', name: 'Sidebar', component: SideBar },
-    { path: '/sidebarlink', name: 'SidebarLink', component: SidebarLink },
-  ],
+    {
+      path: '/',
+      name: 'Home',
+      component: HomeView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register
+    },
+    {
+      path: '*',
+      redirect: '/'
+    }
+  ]
 });
+
+import VueCookies from 'vue-cookies';
 
 router.beforeEach((to, from, next) => {
-  console.log(`Navigating to ${to.path}`);
+  const token = VueCookies.get('access_token'); // Update to match token key
 
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    console.log('Requires Auth:', store.getters.isAuthenticated);
-
-    if (!store.getters.isAuthenticated) {
-      console.log('Redirecting to Login');
-      next({ name: 'Login' });
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!token) {
+      next('/login'); // Redirect to login if not authenticated
     } else {
-      next();
+      next(); // Proceed if authenticated
     }
   } else {
-    next();
+    next(); // Always allow access to routes without `requiresAuth`
   }
 });
+
 
 export default router;

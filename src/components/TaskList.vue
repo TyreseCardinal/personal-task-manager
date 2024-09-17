@@ -1,4 +1,3 @@
-// src/components/TaskList.vue
 <template>
   <div>
     <h1>Task List</h1>
@@ -13,14 +12,39 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import axios from 'axios';
 
 export default {
-  computed: {
-    ...mapGetters(['tasks']),
+  data() {
+    return {
+      tasks: [],
+    };
   },
   methods: {
-    ...mapActions(['fetchTasks', 'deleteTask']),
+    async fetchTasks() {
+      try {
+        const response = await axios.get('/api/tasks', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.tasks = response.data;
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    },
+    async deleteTask(taskId) {
+      try {
+        await axios.delete(`/api/tasks/${taskId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.fetchTasks(); // Refresh task list after deletion
+      } catch (error) {
+        console.error('Error deleting task:', error);
+      }
+    },
   },
   created() {
     this.fetchTasks();
