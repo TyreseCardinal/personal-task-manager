@@ -4,8 +4,6 @@ import router from './router/index'; // Ensure the path is correct
 import VueCookies from 'vue-cookies';
 import '@mdi/font/css/materialdesignicons.css';
 
-import '@/styles/scss/global.scss';
-
 Vue.use(VueCookies);
 
 Vue.config.productionTip = false;

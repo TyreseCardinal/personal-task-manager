@@ -15,6 +15,7 @@
 
 <script>
 import axios from '@/plugins/axios';
+import auth from '@/services/auth'
 
 export default {
   data() {
@@ -43,6 +44,9 @@ export default {
       } catch (error) {
         alert('Invalid credentials');
         console.log(error);
+      }
+      if (auth.isAuthenticated()) {
+        console.log("User is authenticated");
       }
     }
   }

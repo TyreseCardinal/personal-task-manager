@@ -28,9 +28,7 @@ const router = new Router({
       path: '/profile',
       name: 'Profile',
       component: Profile,
-      meta: {
-        requiresAuth: true
-      }
+      meta: { requiresAuth: true }
     },
     {
       path: '/register',
@@ -45,19 +43,25 @@ const router = new Router({
   ]
 });
 
-import VueCookies from 'vue-cookies';
 
+// Navigation Guard
 router.beforeEach((to, from, next) => {
-  const token = VueCookies.get('access_token'); // Update to match token key
+  const isAuthenticated = Vue.$cookies.get('access_token'); // Checking if the auth token cookie exists
 
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!token) {
-      next('/login'); // Redirect to login if not authenticated
+    if (!isAuthenticated) {
+      next({ name: 'Login' }); // Redirect to login page if not authenticated
     } else {
-      next(); // Proceed if authenticated
+      next(); // Proceed to the route if authenticated
     }
   } else {
-    next(); // Always allow access to routes without `requiresAuth`
+    next(); // If route does not require authentication, proceed
+  };
+  if (to.name === 'Login' && isAuthenticated) {
+    // If the user is logged in and tries to access the login page, redirect to home/dashboard
+    next({ name: 'Home' }); // Redirect to dashboard or home page if already authenticated
+  } else {
+    next(); // Otherwise, proceed to the next route
   }
 });
 

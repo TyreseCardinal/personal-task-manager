@@ -17,7 +17,6 @@
 <script>
 import auth from '@/services/auth'; // Assuming you have an auth service
 import Sidebar from '@/components/Sidebar.vue';
-import '@/styles/scss/global.scss';
 
 
 export default {
@@ -30,12 +29,12 @@ export default {
       this.$router.push('/login');
     }
   },
-  created() {
-    if (!auth.isAuthenticated()) {
-      this.$router.push('/login');
+  mounted() {
+    if (auth.isAuthenticated()) {
+      console.log("User is authenticated");
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

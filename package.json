@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "clean": "rimraf node_modules dist"
+    "clean": "rimraf node_modules dist && npm cache clean --force"
   },
   "dependencies": {
     "@jamescoyle/svg-icon": "^0.2.1",
@@ -14,18 +14,21 @@
     "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
     "axios": "^1.7.7",
-    "sass-embedded": "^1.78.0",
     "vue": "^2.6.14",
     "vue-cookies": "^1.8.4",
     "vue-loader": "^15.11.1",
-    "vue-router": "^3.5.1"
+    "vue-router": "^3.5.1",
+    "webpack-dev-server": "^5.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "css-loader": "^7.1.2",
+    "node-sass": "^9.0.0",
     "rimraf": "^6.0.1",
-    "sass": "^1.78.0",
-    "sass-loader": "^13.2.2",
+    "sass": "^1.79.1",
+    "sass-loader": "^13.3.3",
+    "style-loader": "^4.0.0",
     "vue-template-compiler": "^2.6.14",
     "webpack": "^5.94.0"
   }

@@ -64,7 +64,7 @@ export default {
       return this.$route.path === path;
     },
     logout() {
-      localStorage.removeItem("access_token");
+      this.$cookies.remove("access_token");
       this.$router.push("/login");
     },
   },

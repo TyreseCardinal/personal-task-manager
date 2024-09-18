@@ -12,7 +12,6 @@
 
 <script>
 import Sidebar from '@/components/Sidebar.vue';
-import '@/styles/scss/global.scss';
 
 export default {
   components: {
