@@ -1,15 +1,18 @@
 <template>
   <div id="app">
-    <Sidebar v-if="!isLoginPage" :collapsed="sidebarCollapsed" @toggle="toggleSidebar" />
-    <div :class="['main-content', { 'content-expanded': !sidebarCollapsed && !isLoginPage }]">
+    <!-- Conditionally render Sidebar if hideSidebar meta is not true -->
+    <Sidebar v-if="!hideSidebar" :collapsed="sidebarCollapsed" @toggle="toggleSidebar" />
+
+    <!-- Main content area adapts based on sidebar visibility -->
+    <div :class="['main-content', { 'content-expanded': !sidebarCollapsed && !hideSidebar }]">
       <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import '@mdi/font/css/materialdesignicons.css';
 import Sidebar from '@/components/Sidebar.vue';
+import '@/styles/scss/global.scss';
 
 export default {
   components: {
@@ -21,8 +24,9 @@ export default {
     };
   },
   computed: {
-    isLoginPage() {
-      return this.$route.path === '/login';
+    // Check if the route's meta field specifies hiding the sidebar
+    hideSidebar() {
+      return this.$route.meta.hideSidebar;
     }
   },
   methods: {
@@ -43,6 +47,11 @@ export default {
 
 .main-content {
   box-sizing: border-box;
+}
+
+.content-expanded {
+  margin-left: 250px;
+  /* Adjust this depending on the size of your sidebar */
 }
 
 * {

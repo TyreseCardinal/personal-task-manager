@@ -4,7 +4,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        additionalData: `@import "@/assets/styles/_colors.scss";`
+        additionalData: `@import "../src/styles/scss/global.scss";`
       }
     }
   }

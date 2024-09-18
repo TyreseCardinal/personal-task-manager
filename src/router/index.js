@@ -21,7 +21,8 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: { hideSidebar: true }
     },
     {
       path: '/profile',
@@ -34,7 +35,8 @@ const router = new Router({
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
+      meta: { hideSidebar: true }
     },
     {
       path: '*',

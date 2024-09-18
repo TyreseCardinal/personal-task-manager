@@ -17,6 +17,7 @@
 <script>
 import auth from '@/services/auth'; // Assuming you have an auth service
 import Sidebar from '@/components/Sidebar.vue';
+import '@/styles/scss/global.scss';
 
 
 export default {
@@ -37,9 +38,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .home-view {
-  background-color: #f4f4f4;
+  background-color: $primary-color;
   color: #333;
   display: flex;
   flex-direction: column;

@@ -6,24 +6,50 @@
         <span v-if="!collapsed">Profile</span>
       </router-link>
       <router-link to="/dashboard" class="sidebar-link" :class="{ active: isActive('/dashboard') }">
-        <i :class="['mdi', 'mdi-home', { 'icon-hidden': collapsed }]" class="icon" />
+        <i :class="[
+          'mdi',
+          'mdi-home',
+          { 'icon-hidden': collapsed },
+          {
+            'icon-active': isActive('/route'),
+          },
+        ]" class="icon" />
         <span v-if="!collapsed">Dashboard</span>
       </router-link>
       <router-link to="/tasks" class="sidebar-link" :class="{ active: isActive('/tasks') }">
-        <i :class="['mdi', 'mdi-format-list-checks', { 'icon-hidden': collapsed }]" class="icon" />
+        <i :class="[
+          'mdi',
+          'mdi-format-list-checks',
+          { 'icon-hidden': collapsed },
+        ]" class="icon" />
         <span v-if="!collapsed">Tasks</span>
       </router-link>
       <router-link to="/projects" class="sidebar-link" :class="{ active: isActive('/projects') }">
-        <i :class="['mdi', 'mdi-folder-outline', { 'icon-hidden': collapsed }]" class="icon" />
+        <i :class="[
+          'mdi',
+          'mdi-folder-outline',
+          { 'icon-hidden': collapsed },
+          {
+            'icon-active': isActive('/route'),
+          },
+        ]" class="icon" />
         <span v-if="!collapsed">Projects</span>
       </router-link>
     </div>
     <button @click="logout" class="logout-button sidebar-link">
-      <i :class="['mdi', 'mdi-logout', { 'icon-hidden': collapsed }]" class="icon" />
+      <i :class="[
+        'mdi',
+        'mdi-logout',
+        { 'icon-hidden': collapsed },
+        { 'icon-active': isActive('/route') },
+      ]" class="icon" />
       <span v-if="!collapsed">Logout</span>
     </button>
     <button @click="$emit('toggle')" class="toggle-button">
-      <i class="toggle-btn-icon" :class="['mdi', collapsed ? 'mdi-chevron-double-right' : 'mdi-chevron-double-left']" />
+      <i class="toggle-btn-icon" :class="[
+        'mdi',
+        collapsed ? 'mdi-chevron-double-right' : 'mdi-chevron-double-left',
+      ]" />
     </button>
   </div>
 </template>
@@ -38,8 +64,8 @@ export default {
       return this.$route.path === path;
     },
     logout() {
-      localStorage.removeItem('access_token');
-      this.$router.push('/login');
+      localStorage.removeItem("access_token");
+      this.$router.push("/login");
     },
   },
 };
@@ -94,6 +120,7 @@ export default {
   color: #d2b48c;
   font-size: 2rem;
   cursor: pointer;
+  padding-right: 2rem;
 }
 
 .logout-button {

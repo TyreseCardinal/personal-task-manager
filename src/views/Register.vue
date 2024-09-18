@@ -6,6 +6,9 @@
       <input v-model="email" type="email" placeholder="Email" />
       <input v-model="password" type="password" placeholder="Password" />
       <button type="submit">Register</button>
+      <h3>Already have an account? Login
+        <router-link to="/login">here</router-link>
+      </h3>
     </form>
     <p>{{ message }}</p>
   </div>
@@ -31,6 +34,7 @@ export default {
           email: this.email,
           password: this.password,
         });
+
         this.message = response.data.message;
         this.$router.push('/login');
       } catch (error) {
@@ -68,5 +72,11 @@ p {
   color: red;
   margin-top: 10px;
   text-align: center;
+}
+
+input {
+  margin: 1rem;
+  width: 200px;
+  height: 25px;
 }
 </style>

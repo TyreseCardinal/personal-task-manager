@@ -5,13 +5,16 @@
       <input v-model="email" type="email" placeholder="Email" />
       <input v-model="password" type="password" placeholder="Password" />
       <button type="submit">Login</button>
+      <h3>
+        Not registered? Create an account
+        <router-link to="/register">here</router-link>
+      </h3>
     </form>
   </div>
 </template>
 
 <script>
 import axios from '@/plugins/axios';
-import VueCookies from 'vue-cookies';
 
 export default {
   data() {
@@ -34,7 +37,7 @@ export default {
 
         if (response.status === 200) {
           console.log('Login Successful');
-          VueCookies.set('access_token', response.data.token); // Correctly set token in cookies
+          this.$cookies.set('access_token', response.data.token); // Correctly set token in cookies
           this.$router.push('/'); // Redirect to home
         }
       } catch (error) {
