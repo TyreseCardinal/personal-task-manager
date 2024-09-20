@@ -1,0 +1,15 @@
+.home-view {
+  padding: 2rem;
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-collapsed .home-view {
+  margin-left: 50px;
+  /* Collapsed sidebar width */
+}
+
+.app-container:not(.sidebar-collapsed) .home-view {
+  margin-left: 150px;
+  /* Expanded sidebar width */
+}

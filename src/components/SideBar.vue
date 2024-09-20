@@ -1,56 +1,64 @@
 <template>
   <div :class="['sidebar', { 'collapsed-sidebar': collapsed }]">
     <div class="sidebar-content">
-      <router-link to="/profile" class="sidebar-link" :class="{ active: isActive('/profile') }">
-        <i :class="['mdi', 'mdi-account', { 'icon-hidden': collapsed }]" class="icon" />
-        <span v-if="!collapsed">Profile</span>
+      <!-- Logo -->
+      <img src="@/assets/logo.png" width="50px" height="50px" class="logo" alt="My logo" />
+
+      <!-- Spacer -->
+      <hr :style="{ width: collapsed ? '50px' : '150px' }" class="sidebar-divider" />
+
+      <!-- Navigation Links -->
+      <router-link to="/" class="sidebar-link" :class="{ active: isActive('/') }">
+        <i :class="['mdi', 'mdi-home']" class="icon" />
+        <span class="sidebar-text" v-if="!collapsed">Home</span>
       </router-link>
-      <router-link to="/dashboard" class="sidebar-link" :class="{ active: isActive('/dashboard') }">
-        <i :class="[
-          'mdi',
-          'mdi-home',
-          { 'icon-hidden': collapsed },
-          {
-            'icon-active': isActive('/route'),
-          },
-        ]" class="icon" />
-        <span v-if="!collapsed">Dashboard</span>
-      </router-link>
+
       <router-link to="/tasks" class="sidebar-link" :class="{ active: isActive('/tasks') }">
-        <i :class="[
-          'mdi',
-          'mdi-format-list-checks',
-          { 'icon-hidden': collapsed },
-        ]" class="icon" />
-        <span v-if="!collapsed">Tasks</span>
+        <i :class="['mdi', 'mdi-format-list-checks']" class="icon" />
+        <span class="sidebar-text" v-if="!collapsed">Tasks</span>
       </router-link>
+
       <router-link to="/projects" class="sidebar-link" :class="{ active: isActive('/projects') }">
-        <i :class="[
-          'mdi',
-          'mdi-folder-outline',
-          { 'icon-hidden': collapsed },
-          {
-            'icon-active': isActive('/route'),
-          },
-        ]" class="icon" />
-        <span v-if="!collapsed">Projects</span>
+        <i :class="['mdi', 'mdi-folder-outline']" class="icon" />
+        <span class="sidebar-text" v-if="!collapsed">Projects</span>
       </router-link>
+
+      <router-link to="/timeline" class="sidebar-link" :class="{ active: isActive('/timeline') }">
+        <i :class="['mdi', 'mdi-chart-timeline-variant']" class="icon" />
+        <span class="sidebar-text" v-if="!collapsed">Timeline</span>
+      </router-link>
+
+      <router-link to="/calendar" class="sidebar-link" :class="{ active: isActive('/calendar') }">
+        <i :class="['mdi', 'mdi-calendar-month']" class="icon" />
+        <span class="sidebar-text" v-if="!collapsed">Calendar</span>
+      </router-link>
+
+      <!-- Profile -->
+      <router-link to="/profile" class="sidebar-link" :class="{ active: isActive('/profile') }">
+        <i :class="['mdi', 'mdi-account']" class="icon" />
+        <span class="sidebar-text" v-if="!collapsed">Profile</span>
+      </router-link>
+
+      <!-- Spacer between Profile and Collapse -->
+      <div class="sidebar-divider"></div>
+
+      <!-- Settings -->
+      <router-link to="/settings" class="sidebar-link" :class="{ active: isActive('/settings') }">
+        <i :class="['mdi', 'mdi-cog']" class="icon" />
+        <span class="sidebar-text" v-if="!collapsed">Settings</span>
+      </router-link>
+
+      <!-- Logout Button -->
+      <button class="sidebar-link logout-button" @click="logout">
+        <i :class="['mdi', 'mdi-logout']" class="icon" />
+        <span class="sidebar-text" v-if="!collapsed">Logout</span>
+      </button>
+
+      <!-- Collapse Button -->
+      <button @click="$emit('toggle')" class="toggle-button">
+        <i :class="['mdi', collapsed ? 'mdi-chevron-double-right' : 'mdi-chevron-double-left']" class="icon" />
+      </button>
     </div>
-    <button @click="logout" class="logout-button sidebar-link">
-      <i :class="[
-        'mdi',
-        'mdi-logout',
-        { 'icon-hidden': collapsed },
-        { 'icon-active': isActive('/route') },
-      ]" class="icon" />
-      <span v-if="!collapsed">Logout</span>
-    </button>
-    <button @click="$emit('toggle')" class="toggle-button">
-      <i class="toggle-btn-icon" :class="[
-        'mdi',
-        collapsed ? 'mdi-chevron-double-right' : 'mdi-chevron-double-left',
-      ]" />
-    </button>
   </div>
 </template>
 
@@ -64,76 +72,13 @@ export default {
       return this.$route.path === path;
     },
     logout() {
-      this.$cookies.remove("access_token");
-      this.$router.push("/login");
-    },
-  },
+      this.$cookies.remove('access_token');
+      this.$router.push('/login');
+    }
+  }
 };
 </script>
 
 <style scoped>
-.sidebar {
-  width: 150px;
-  /* Expanded width */
-  background-color: #00334e;
-  color: #d2b48c;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  padding: 0.5rem;
-  transition: width 0.3s ease;
-  /* Smooth transition */
-  float: left;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-  /* Full height */
-}
-
-.collapsed-sidebar {
-  width: 50px;
-}
-
-.sidebar-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #d2b48c;
-  transition: background-color 0.3s ease;
-}
-
-.sidebar-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.icon {
-  font-size: 2rem;
-}
-
-.toggle-button {
-  background: none;
-  border: none;
-  color: #d2b48c;
-  font-size: 2rem;
-  cursor: pointer;
-  padding-right: 2rem;
-}
-
-.logout-button {
-  background: none;
-  border: none;
-  color: #d2b48c;
-  cursor: pointer;
-  align-items: center;
-}
-
-.logout-button i:hover {
-  background: #00476d9d;
-  border-radius: 50px;
-  opacity: 0.3s ease-in-out;
-}
+@import '../styles/scss/sidebar.scss';
 </style>
