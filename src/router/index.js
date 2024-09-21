@@ -4,6 +4,7 @@ import HomeView from '@/views/HomeView.vue';
 import Login from '@/views/Login.vue';
 import Profile from '@/views/Profile.vue';
 import Register from '@/views/Register.vue';
+import TimelineView from '@/views/TimelineView.vue';
 
 Vue.use(Router);
 
@@ -23,6 +24,12 @@ const router = new Router({
       name: 'Login',
       component: Login,
       meta: { hideSidebar: true }
+    },
+    {
+      path: '/timeline',
+      name: 'Timeline',
+      component: TimelineView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/profile',
