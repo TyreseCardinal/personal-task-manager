@@ -1,7 +1,6 @@
 import Vue from 'vue'
-import VueCookies from 'vue-cookies'
+import cookies from 'vue-cookies'
 
-Vue.use(VueCookies)
+Vue.use(cookies)
 
-// Optionally set default cookies options
-Vue.$cookies.config('7d') // 7 days expiration
+Vue.prototype.$cookies.config('1d');

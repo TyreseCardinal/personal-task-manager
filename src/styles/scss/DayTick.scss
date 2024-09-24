@@ -1,5 +1,5 @@
 .day-tick {
-  width: 60px;
+  width: 20px;
   height: 100px;
   text-align: center;
   line-height: 100px;
@@ -7,9 +7,16 @@
   color: #757575;
   border-right: 1px solid #e0e0e0;
   position: relative;
+  cursor: pointer;
+  transition: color 0.3s, font-weight 0.3s;
 
   &.today {
     color: #1976d2; // Highlight current day
+    font-weight: bold;
+  }
+
+  &:hover {
+    color: #424242;
     font-weight: bold;
   }
 }

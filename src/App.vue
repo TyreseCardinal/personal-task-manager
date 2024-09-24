@@ -19,18 +19,16 @@ export default {
   },
   data() {
     return {
-      collapsed: true, // Manage collapsed state of the sidebar
+      collapsed: true,
     };
   },
   computed: {
-    // Determines if the sidebar should be displayed based on the current route
     showSidebar() {
-      const hiddenSidebarRoutes = ['/login', '/signup', '/404']; // Add routes where sidebar should be hidden
+      const hiddenSidebarRoutes = ['/login', '/signup', '/404'];
       return !hiddenSidebarRoutes.includes(this.$route.path);
     },
   },
   methods: {
-    // Toggle the collapsed state of the sidebar
     toggleSidebar() {
       this.collapsed = !this.collapsed;
     },

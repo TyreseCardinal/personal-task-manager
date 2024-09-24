@@ -32,16 +32,16 @@ export default {
       formData.append('file', this.selectedFile);
 
       try {
-        const response = await axios.post('/auth/profile-picture', formData, {
+        const response = await axios.post('http://localhost:5000/api/profile-picture', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           }
         });
 
         this.uploadMessage = response.data.message;
       } catch (error) {
-        this.uploadMessage = error.response.data.message || 'Upload failed. Please try again.';
+        this.uploadMessage = error.response?.data?.message || 'Upload failed. Please try again.';
       }
     },
   },

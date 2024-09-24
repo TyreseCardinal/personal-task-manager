@@ -52,9 +52,10 @@ export default {
         const formData = new FormData();
         formData.append('file', file);
         try {
-          await axios.post('/users/profile-picture', formData, {
+          await axios.options('/upload', formData, {
             headers: {
-              'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'multipart/form-data'
             },
           });
           this.uploadMessage = 'Profile picture uploaded successfully!';

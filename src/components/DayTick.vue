@@ -1,5 +1,5 @@
 <template>
-  <div :class="['day-tick', { today: isToday }]">
+  <div :class="['day-tick', { today: isToday }]" @click="goToDay">
     {{ day }}
   </div>
 </template>
@@ -16,10 +16,12 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  methods: {
+    goToDay() {
+      // Emit an event or change state when the day is clicked
+      this.$emit('day-clicked', this.day);
+    }
   }
 };
 </script>
-
-<style scoped lang="scss">
-@import '@/styles/scss/DayTick.scss';
-</style>

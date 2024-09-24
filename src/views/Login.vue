@@ -27,58 +27,33 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.post('/auth/login', {
+        // Use the auth service to handle login
+        const response = await auth.login({
           email: this.email,
-          password: this.password
-        }, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          password: this.password,
         });
 
-        if (response.status === 200) {
-          console.log('Login Successful');
-          this.$cookies.set('access_token', response.data.token); // Correctly set token in cookies
-          this.$router.push('/'); // Redirect to home
+        // Once login is successful, redirect
+        if (response) {
+          setTimeout(() => {
+            this.$router.push('/');
+          }, 500);
+        } else {
+          console.error('Login failed');
         }
       } catch (error) {
-        alert('Invalid credentials');
-        console.log(error);
+        if (error.response) {
+          alert('Error: ' + (error.response.data.message || 'Invalid credentials'));
+        } else {
+          alert('Error: Unable to connect to the server');
+        }
+        console.log(error)
       }
-      if (auth.isAuthenticated()) {
-        console.log("User is authenticated");
-      }
-    }
+    },
   }
-};
+}
 </script>
 
-<style scoped>
-.login-container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #00334E;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #005b8f;
-}
-
-p {
-  color: red;
-  margin-top: 10px;
-  text-align: center;
-}
+<style lang="scss" scoped>
+@import '@/styles/scss/Login.scss';
 </style>
