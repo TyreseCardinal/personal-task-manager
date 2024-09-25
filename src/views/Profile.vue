@@ -1,11 +1,7 @@
 <template>
-  <div class="profile-container">
-    <!-- Profile Picture Upload Section -->
-    <div class="profile-picture-upload">
-      <h2>Upload Profile Picture</h2>
-      <input type="file" @change="handleFileUpload" />
-      <p v-if="uploadMessage">{{ uploadMessage }}</p>
-    </div>
+  <main class="profile-container">
+    <!-- File upload handled by ProfilePicture component -->
+    <ProfilePicture />
 
     <!-- Update User Information Section -->
     <div class="update-user-info">
@@ -30,40 +26,25 @@
       <button @click="deleteAccount">Delete My Account</button>
       <p v-if="message">{{ message }}</p>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
 import axios from '@/plugins/axios';
+import ProfilePicture from '@/components/ProfilePicture.vue';
 
 export default {
+  components: {
+    ProfilePicture,
+  },
   data() {
     return {
       updateEmail: '',
       updatePassword: '',
       message: '',
-      uploadMessage: ''
     };
   },
   methods: {
-    async handleFileUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
-        try {
-          await axios.options('/upload', formData, {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`,
-              'Content-Type': 'multipart/form-data'
-            },
-          });
-          this.uploadMessage = 'Profile picture uploaded successfully!';
-        } catch (error) {
-          this.uploadMessage = 'Failed to upload profile picture.';
-        }
-      }
-    },
     async updateUser() {
       try {
         await axios.put('/users/update', {
@@ -83,37 +64,11 @@ export default {
       } catch (error) {
         this.message = 'Account deletion failed.';
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped>
-.profile-container {
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #00334E;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #005b8f;
-}
-
-p {
-  color: red;
-  margin-top: 10px;
-  text-align: center;
-}
+<style lang="scss" scoped>
+@import '@/styles/scss/profile.scss';
 </style>

@@ -1,21 +1,30 @@
 <template>
   <div>
-    <h3>Upload Profile Picture</h3>
-    <input type="file" @change="onFileChange" />
-    <button @click="uploadProfilePicture">Upload</button>
+    <form>
+      <h3>Upload Profile Picture</h3>
+      <input type="file" @change="onFileChange" />
+      <button @click.prevent="uploadProfilePicture">Upload</button>
+    </form>
+
+    <!-- Display the uploaded profile picture -->
+    <div v-if="profilePictureUrl">
+      <h4>Profile Picture:</h4>
+      <img :src="profilePictureUrl" alt="Profile Picture" />
+    </div>
 
     <div v-if="uploadMessage">{{ uploadMessage }}</div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '@/plugins/axios';
 
 export default {
   data() {
     return {
       selectedFile: null,
       uploadMessage: '',
+      profilePictureUrl: ''  // Store the uploaded image URL
     };
   },
   methods: {
@@ -23,27 +32,37 @@ export default {
       this.selectedFile = event.target.files[0];
     },
     async uploadProfilePicture() {
-      if (!this.selectedFile) {
-        this.uploadMessage = 'Please select a file to upload.';
+      const access_token = Vue.$cookies.get('access_token');
+      if (!access_token) {
+        this.uploadMessage = 'You are not logged in.';
         return;
       }
 
       const formData = new FormData();
-      formData.append('file', this.selectedFile);
+      formData.append('profile_picture', this.selectedFile);
 
       try {
-        const response = await axios.post('http://localhost:5000/api/profile-picture', formData, {
+        const response = await axios.post('/api/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-          }
+          },
         });
 
-        this.uploadMessage = response.data.message;
+        this.uploadMessage = 'Upload successful!';
+        this.profilePictureUrl = response.data.profile_picture_url;
       } catch (error) {
-        this.uploadMessage = error.response?.data?.message || 'Upload failed. Please try again.';
+        console.error(error);
+        this.uploadMessage = 'Upload failed.';
       }
-    },
+    }
+
   },
 };
 </script>
+
+<style scoped>
+img {
+  max-width: 200px;
+  border-radius: 50%;
+}
+</style>

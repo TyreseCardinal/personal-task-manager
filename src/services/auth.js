@@ -8,15 +8,12 @@ const auth = {
       const { access_token } = response.data; // Assuming the token is named 'access_token'
 
       // Store the token in a cookie with proper options
-      VueCookies.set(
-        'access_token',
-        access_token,
-        '1h', // Expires in 1 hour
-        '/', // Path
-        'localhost', // Domain (adjust for production)
-        false, // Secure false for dev; change to true for production
-        'Lax' // SameSite attribute for dev (None for production)
-      );
+      VueCookies.set('access_token', access_token, {
+        expires: '1h', // Expires in 1 hour
+        path: '/', // Path
+        secure: false, // Secure false for dev; change to true for production
+        sameSite: 'Lax', // SameSite attribute for dev (None for production)
+      });
 
       return response.data;
     } catch (error) {

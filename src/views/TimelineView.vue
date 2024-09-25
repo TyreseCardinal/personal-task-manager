@@ -39,7 +39,7 @@ export default {
       currentMonth: format(new Date(), 'MMMM'),
       currentYear: format(new Date(), 'yyyy'),
       displayedDays: this.generateDays(),
-      events: [], // Fetched events will be stored here
+      events: [],
     };
   },
   computed: {
@@ -90,7 +90,7 @@ export default {
 
         const response = await axios.get('/api/timeline', {
           params: {
-            current_date: currentDate // Use currentDate instead of this.currentDate
+            current_date: currentDate
           }
         });
 

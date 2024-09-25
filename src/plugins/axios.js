@@ -11,26 +11,14 @@ const instance = axios.create({
 
 // Request interceptor to add JWT token to headers
 instance.interceptors.request.use((config) => {
-  if (config.url.startsWith('/api')) {
-    const access_token = this.$cookies.get('access_token');
-    if (access_token) {
-      config.headers.Authorization = `Bearer ${access_token}`;
-    }
+  const access_token = Vue.$cookies.get('access_token'); // Use Vue.$cookies to get the token
+  if (access_token) {
+    config.headers.Authorization = `Bearer ${access_token}`;
   }
   return config;
 }, (error) => {
   return Promise.reject(error);
 });
 
-// Response interceptor to handle errors globally
-instance.interceptors.response.use((response) => {
-  return response;
-}, (error) => {
-  if (error.response && error.response.status === 401) {
-    Vue.$cookies.remove('access_token');
-    window.location.href = '/login'; // Redirect to login
-  }
-  return Promise.reject(error);
-});
 
 export default instance;
