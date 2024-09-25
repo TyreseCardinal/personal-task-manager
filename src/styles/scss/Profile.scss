@@ -25,3 +25,11 @@ p {
   margin-top: 10px;
   text-align: center;
 }
+
+.profile-image {
+  max-width: 200px;
+  /* Limit the size of the displayed image */
+  max-height: 200px;
+  border-radius: 10px;
+  /* Optional: add some styling */
+}
