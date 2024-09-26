@@ -12,8 +12,32 @@
 
 <script>
 import Sidebar from './components/Sidebar.vue';
+import auth from '@/services/auth.js';
+import { isTokenExpired } from '@/utils/auth.js';
 
 export default {
+  async created() {
+    try {
+      const accessToken = auth.getToken();
+
+      if (accessToken) {
+        // Check if the token is expired
+        const isExpired = isTokenExpired(accessToken);
+        if (isExpired) {
+          await auth.refreshToken(); // Try to refresh the token
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing token:', error);
+      this.logoutAndRedirect(); // A separate method to handle logout and redirect
+    }
+  },
+  methods: {
+    logoutAndRedirect() {
+      auth.logout(); // Clear cookies
+      this.$router.push('/login'); // Redirect to login page
+    },
+  },
   components: {
     Sidebar,
   },
@@ -34,7 +58,9 @@ export default {
     },
   },
 };
+
 </script>
+
 
 <style lang="scss">
 @import '@/styles/scss/variables';

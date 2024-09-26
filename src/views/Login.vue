@@ -1,20 +1,22 @@
 <template>
-  <div class="login-container">
+  <main class="login-container">
     <h1>Login</h1>
     <form @submit.prevent="login">
       <input v-model="email" type="email" placeholder="Email" />
       <input v-model="password" type="password" placeholder="Password" />
       <button type="submit">Login</button>
+      <label>
+        <input type="checkbox" v-model="rememberMe"> Keep me signed in
+      </label>
       <h3>
         Not registered? Create an account
         <router-link to="/register">here</router-link>
       </h3>
     </form>
-  </div>
+  </main>
 </template>
 
 <script>
-import axios from '@/plugins/axios';
 import auth from '@/services/auth'
 
 export default {
@@ -22,16 +24,16 @@ export default {
     return {
       email: '',
       password: '',
+      rememberMe: false,
     };
   },
   methods: {
     async login() {
       try {
-        // Use the auth service to handle login
         const response = await auth.login({
           email: this.email,
           password: this.password,
-        });
+        }, this.rememberMe);
 
         // Once login is successful, redirect
         if (response) {
