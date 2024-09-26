@@ -36,7 +36,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import '@/styles/scss/variables';
+
 /* Keep your original sidebar and main content styling, with minor adjustments */
 .app-container {
   display: flex;
@@ -59,10 +61,5 @@ export default {
 .sidebar-collapsed .with-sidebar {
   margin-left: 50px;
   /* Match the collapsed sidebar width */
-}
-
-/* When no sidebar is present (e.g., on login/signup pages), margin is reset */
-.main-content {
-  margin-left: 0;
 }
 </style>

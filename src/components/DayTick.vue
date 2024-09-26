@@ -1,6 +1,6 @@
 <template>
   <div :class="['day-tick', { today: isToday }]" @click="goToDay">
-    {{ day }}
+    <div class="day-label">{{ day }}</div>
   </div>
 </template>
 
@@ -10,18 +10,21 @@ export default {
   props: {
     day: {
       type: String,
-      required: true
+      required: true,
     },
     isToday: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     goToDay() {
-      // Emit an event or change state when the day is clicked
       this.$emit('day-clicked', this.day);
-    }
-  }
+    },
+  },
 };
 </script>
+
+<style scoped lang="scss">
+@import '@/styles/scss/DayTick.scss'
+</style>

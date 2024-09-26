@@ -7,7 +7,10 @@
   background-color: #42a5f5;
   border-radius: 50%;
   cursor: pointer;
+  padding: 10px;
+  margin-bottom: 10px;
   transition: transform 0.3s ease, background-color 0.3s;
+  border: 1px solid #ccc;
 
   &:hover {
     transform: scale(1.2);
@@ -31,5 +34,47 @@
 
   &:hover .tooltip {
     display: block;
+  }
+}
+
+.event-details {
+  margin-top: 10px;
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+
+.event-tick {
+  position: absolute; // Keep this for overlapping
+  bottom: 10px; // Aligning with day ticks
+  width: 80px; // Width to hold event titles
+  height: 40px; // Height for event tick
+  background-color: #29b6f6; // Color for event ticks
+  border-radius: 5px;
+  z-index: 3;
+  cursor: pointer;
+  transition: transform 0.3s;
+  text-align: center;
+  color: white;
+
+  &:hover {
+    transform: scale(1.1); // Slightly bigger on hover
+  }
+
+  .event-details {
+    display: none; // Default to hidden
+    background-color: white; // Details background
+    color: black;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 50px; // Position above event tick
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+  }
+
+  &.expanded .event-details {
+    display: block; // Show details when expanded
   }
 }

@@ -29,9 +29,9 @@
   position: relative;
   width: 20px;
   height: 20px;
-  background-color: #666;
+  background-color: $darkblue-color;
   border-radius: 50%;
-  margin: 0 10px; // Adjust spacing between ticks
+  margin: 10rem 10px; // Adjust spacing between ticks
   cursor: pointer;
   z-index: 2;
   transition: background-color 0.3s;
@@ -170,4 +170,20 @@
 
 .event-tick.expanded+.event-details {
   display: block;
+}
+
+.timeline-container {
+  width: 100%;
+  overflow-x: auto;
+  position: relative;
+  padding: 20px 0;
+}
+
+.timeline {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; // Align at the start
+  position: relative;
+  height: 150px; // Adjust height for visual appeal
+  padding: 20px 0;
 }

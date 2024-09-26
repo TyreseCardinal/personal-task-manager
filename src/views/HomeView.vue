@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import auth from '@/services/auth'; // Assuming you have an auth service
+import auth from '@/services/auth.js';
 import Sidebar from '@/components/Sidebar.vue';
 
 

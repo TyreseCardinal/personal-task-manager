@@ -1,35 +1,27 @@
 <template>
-  <div class="event-tick" :style="{ left: eventPosition }" @click="expand">
-    <div class="tooltip">
-      {{ event.title }}
+  <div :class="['event-tick', { expanded: isExpanded }]" @click="expandEvent">
+    <h3>{{ event.title }}</h3>
+    <p>{{ event.event_date }}</p>
+    <div v-if="isExpanded" class="event-details">
+      <p>{{ event.description }}</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'EventTick',
   props: {
-    event: {
-      type: Object,
-      required: true
-    }
-  },
-  computed: {
-    eventPosition() {
-      // This could be a dynamic calculation based on event date, time, etc.
-      // For simplicity, I'm using event.position as a placeholder.
-      return this.event.position + 'px';
-    }
+    event: Object,
+    isExpanded: Boolean,
   },
   methods: {
-    expand() {
+    expandEvent() {
       this.$emit('expand', this.event);
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import '@/styles/scss/EventTick.scss';
 </style>

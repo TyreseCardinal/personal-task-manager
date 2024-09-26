@@ -1,7 +1,7 @@
 <template>
-  <div class="timeline-view">
+  <main class="timeline-view">
     <div class="timeline-header">
-      <!-- Buttons -->
+      <!-- Buttons and Search -->
       <button @click="addTask">Add Task</button>
       <button @click="filterTasks">Filter</button>
       <button @click="sortTasks">Sort</button>
@@ -11,23 +11,23 @@
       <div class="month-year-display">{{ currentMonth }} {{ currentYear }}</div>
     </div>
 
-    <div class="timeline-content">
+    <div class="timeline-day-ticks">
       <div class="day-ticks">
         <DayTick v-for="(day, index) in displayedDays" :key="index" :day="day" :isToday="isToday(day)" />
       </div>
-
+    </div>
+    <div class="timeline-event-ticks">
       <div class="event-ticks">
         <EventTick v-for="event in filteredEvents" :key="event.id" :event="event" @expand="handleEventExpand" />
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
 import DayTick from '@/components/DayTick.vue';
 import EventTick from '@/components/EventTick.vue';
-import { format, addDays, subDays, isToday as isTodayFn } from 'date-fns';
-import auth from '@/services/auth.js';
+import { format, addDays, isToday as isTodayFn } from 'date-fns';
 import axios from '@/plugins/axios.js';
 
 export default {
@@ -40,6 +40,7 @@ export default {
       currentYear: format(new Date(), 'yyyy'),
       displayedDays: this.generateDays(),
       events: [],
+      expandedEventId: null,  // Track which event is currently expanded
     };
   },
   computed: {
@@ -48,24 +49,18 @@ export default {
         return this.events;
       }
       return this.events.filter(event =>
-        event.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+        event.title && event.title.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
   },
-  created() {
-    this.fetchEvents();
-  },
   methods: {
     addTask() {
-      // Logic to add a task
       console.log('Add task clicked');
     },
     filterTasks() {
-      // Filter logic
       console.log('Filter clicked');
     },
     sortTasks() {
-      // Sorting logic
       console.log('Sort clicked');
     },
     generateDays() {
@@ -80,38 +75,54 @@ export default {
       return isTodayFn(new Date(day));
     },
     handleEventExpand(event) {
-      // Logic for expanding the event details
-      console.log('Event expanded:', event);
+      // Logic to toggle expanded event
+      if (this.expandedEventId === event.id) {
+        this.expandedEventId = null;  // Collapse if the same event is clicked
+      } else {
+        this.expandedEventId = event.id;  // Expand the clicked event
+      }
     },
     async fetchEvents() {
       try {
         const today = new Date();
         const currentDate = format(today, 'yyyy-MM-dd');
+        const access_token = this.$cookies.get('access_token');
+
+        console.log('Current Date:', currentDate);
+        console.log('Access Token:', access_token); // Log access token
 
         const response = await axios.get('/api/timeline', {
           params: {
             current_date: currentDate
-          }
+          },
+          headers: {
+            Authorization: `Bearer ${access_token}`
+          },
         });
 
+        console.log('API Response:', response.data); // Log API response
+
         if (response.status === 200) {
-          this.events = response.data.events;
-          console.log('Events fetched successfully:', this.events);
+          this.events = response.data;
         }
       } catch (error) {
         console.error('Error fetching events:', error);
+        // Optional: Log more detailed error info if available
+        if (error.response) {
+          console.error('Response data:', error.response.data);
+          console.error('Response status:', error.response.status);
+        }
       }
     }
-
   },
-  mounted() {
-    if (auth.isAuthenticated()) {
-      console.log('User is authenticated');
-    }
+  created() {
+    this.fetchEvents();
   },
 };
 </script>
 
 <style scoped lang="scss">
 @import '@/styles/scss/TimelineView.scss';
+@import '@/styles/scss/Timeline.scss';
+@import '@/styles/scss/EventTick.scss';
 </style>

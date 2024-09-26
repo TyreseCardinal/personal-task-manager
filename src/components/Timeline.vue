@@ -1,21 +1,20 @@
 <template>
-  <div class="timeline-container">
-    <div class="timeline" :style="timelineStyle">
+  <div class="timeline-container" :style="{ width: timelineWidth }">
+    <div class="timeline">
       <!-- Day Ticks -->
       <div class="day-tick" v-for="day in days" :key="day" :class="{ today: day === currentDay }">
-        <div class="day-label">{{ day }}</div>
+        <DayTick :day="day" :isToday="day === currentDay" />
       </div>
 
       <!-- Event Ticks -->
-      <div v-for="event in events" :key="event.id" class="event-tick" @click="expandEvent(event)">
-        <!-- Event details (expanded) -->
-        <div class="event-details" v-if="event.expanded">
-          {{ event.details }}
-        </div>
+      <div class="event-tick" v-for="event in events" :key="event.id" @click="expandEvent(event)"
+        :style="{ left: calculateEventPosition(event), top: '50px' }">
+        <EventTick :event="event" :isExpanded="event.expanded" />
       </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import DayTick from '@/components/DayTick.vue';
@@ -28,49 +27,51 @@ export default {
   },
   props: {
     events: Array,
-    currentDay: String
+    currentDay: String,
   },
   data() {
     return {
       days: this.generateDays(),
-      translateValue: 0
     };
-  },
-  computed: {
-    timelineStyle() {
-      return {
-        transform: `translateX(${this.translateValue}px)`,
-      };
-    },
   },
   methods: {
     generateDays() {
       const today = new Date(this.currentDay);
       const days = [];
-
-      // Generate days for 7 days before and after the current day
       for (let i = -7; i <= 7; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
         days.push(date.toISOString().slice(0, 10)); // Format: YYYY-MM-DD
       }
-
       return days;
     },
     expandEvent(event) {
-      console.log("Expanding event:", event);
-      // Logic to expand the event and adjust the timeline
+      event.expanded = !event.expanded; // Toggle expanded state
     },
-    expandEvent(event) {
-      // Toggle the expanded state
-      this.events = this.events.map(e => {
-        if (e.id === event.id) {
-          e.expanded = !e.expanded;
-        }
-        return e;
-      });
-    }
+    calculateEventPosition(event) {
+      const eventDate = new Date(event.event_date);
+      const currentDate = new Date(this.currentDay);
+      const offsetDays = Math.floor((eventDate - currentDate) / (1000 * 60 * 60 * 24));
+      const dayWidth = 40; // Width of each day tick
+      return `${(offsetDays * dayWidth) + 50}px`; // Calculate left position
+    },
   },
+  data() {
+    return {
+      days: this.generateDays(),
+      sidebarWidth: 50, // Default closed width
+      isSidebarOpen: false
+    };
+  },
+  computed: {
+    timelineWidth() {
+      // Adjust the timeline's width based on the sidebar
+      const totalWidth = window.innerWidth; // Get the total viewport width
+      const adjustedWidth = this.isSidebarOpen ? totalWidth - 200 : totalWidth - this.sidebarWidth; // Adjust based on sidebar width
+      return `${adjustedWidth}px`;
+    }
+  }
+
 };
 </script>
 

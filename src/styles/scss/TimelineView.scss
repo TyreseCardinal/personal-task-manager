@@ -1,13 +1,13 @@
 .timeline-view {
-  padding: 1rem;
+  padding: 0;
 
   .timeline-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    padding: 1rem;
 
-    // Button styling
     button {
       margin-right: 10px;
       padding: 0.5rem 1rem;
@@ -23,14 +23,12 @@
       }
     }
 
-    // Search bar styling
     input[type='text'] {
       padding: 0.5rem;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
 
-    // Month/Year display
     .month-year-display {
       font-weight: bold;
       font-size: 1.2rem;
@@ -38,25 +36,17 @@
     }
   }
 
-  .timeline-content {
+  .day-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .event-ticks {
     display: flex;
     position: relative;
-    overflow-x: auto;
-    padding: 1rem;
-    border-top: 2px solid #e0e0e0;
-    border-bottom: 2px solid #e0e0e0;
-
-    .day-ticks {
-      display: flex;
-      justify-content: space-between;
-      flex-grow: 1;
-    }
-
-    .event-ticks {
-      position: relative;
-      width: 100%;
-      height: 120px;
-      /* Adjust this height as per the visual design */
-    }
+    width: 100%;
+    height: 120px;
   }
 }
