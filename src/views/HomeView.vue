@@ -18,12 +18,12 @@
 
 <script>
 import auth from '@/services/auth.js';
-import Sidebar from '@/components/Sidebar.vue';
+import SideBar from '@/components/SideBar.vue';
 
 
 export default {
   components: {
-    Sidebar,
+    SideBar,
   },
   methods: {
     logout() {

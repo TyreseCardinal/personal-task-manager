@@ -1,7 +1,7 @@
 <template>
   <div :class="['app-container', { 'sidebar-collapsed': collapsed }]">
     <!-- Sidebar should only be visible when 'showSidebar' is true -->
-    <Sidebar v-if="showSidebar" :collapsed="collapsed" @toggle="toggleSidebar" />
+    <SideBar v-if="showSidebar" :collapsed="collapsed" @toggle="toggleSidebar" />
 
     <!-- Main content area with dynamic margin -->
     <div :class="['main-content', { 'with-sidebar': showSidebar, 'sidebar-collapsed': collapsed }]">
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Sidebar from './components/Sidebar.vue';
+import SideBar from '@/components/SideBar.vue';
 import auth from '@/services/auth.js';
 import { isTokenExpired } from '@/utils/auth.js';
 
@@ -39,7 +39,7 @@ export default {
     },
   },
   components: {
-    Sidebar,
+    SideBar,
   },
   data() {
     return {
