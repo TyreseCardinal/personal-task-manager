@@ -1,16 +1,14 @@
 <template>
   <main class="timeline-view">
     <div class="timeline-header">
-      <!-- Buttons and Search -->
+      <!-- Buttons, Search, and Month/Year -->
       <button @click="addTask">Add Task</button>
       <button @click="filterTasks">Filter</button>
       <button @click="sortTasks">Sort</button>
       <input type="text" v-model="searchQuery" placeholder="Search tasks" />
-
-      <!-- Month/Year Display -->
-      <div class="month-year-display">{{ currentMonth }} {{ currentYear }}</div>
+      <div class="month-year-display">{{ currentMonth }} {{ currentYear }}
+      </div>
     </div>
-
     <div class="timeline-day-ticks">
       <div class="day-ticks">
         <DayTick v-for="(day, index) in displayedDays" :key="index" :day="day" :isToday="isToday(day)" />
@@ -113,7 +111,7 @@ export default {
           console.error('Response status:', error.response.status);
         }
       }
-    }
+    },
   },
   created() {
     this.fetchEvents();

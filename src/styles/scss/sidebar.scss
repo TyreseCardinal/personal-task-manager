@@ -13,7 +13,6 @@
   overflow: hidden;
   z-index: 1;
 
-
   &.collapsed-sidebar {
     width: 50px;
   }
@@ -45,7 +44,6 @@
       margin-right: 10px;
       font-size: 1.5rem;
     }
-
   }
 
   .sidebar-divider {
@@ -62,7 +60,6 @@
     cursor: pointer;
     padding: 10px;
   }
-
 
   .logout-button {
     background: none;

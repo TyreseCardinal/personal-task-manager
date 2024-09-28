@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Vue from 'vue';
-import cookies from 'vue-cookies';
+import VueCookies from 'vue-cookies';
 
-Vue.use(cookies);
+Vue.use(VueCookies);
 
 const instance = axios.create({
   baseURL: 'http://localhost:5000',

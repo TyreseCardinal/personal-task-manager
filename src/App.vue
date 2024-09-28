@@ -1,9 +1,6 @@
 <template>
   <div :class="['app-container', { 'sidebar-collapsed': collapsed }]">
-    <!-- Sidebar should only be visible when 'showSidebar' is true -->
     <SideBar v-if="showSidebar" :collapsed="collapsed" @toggle="toggleSidebar" />
-
-    <!-- Main content area with dynamic margin -->
     <div :class="['main-content', { 'with-sidebar': showSidebar, 'sidebar-collapsed': collapsed }]">
       <router-view />
     </div>
@@ -13,29 +10,30 @@
 <script>
 import SideBar from '@/components/SideBar.vue';
 import auth from '@/services/auth.js';
-import { isTokenExpired } from '@/utils/auth.js';
+import { jwtDecode } from 'jwt-decode'; // Ensure this import is correct
 
 export default {
   async created() {
     try {
-      const accessToken = auth.getToken();
-
-      if (accessToken) {
-        // Check if the token is expired
-        const isExpired = isTokenExpired(accessToken);
-        if (isExpired) {
-          await auth.refreshToken(); // Try to refresh the token
-        }
+      const isValid = await auth.validateAccessToken(); // Validate the token
+      if (!isValid) {
+        this.logoutAndRedirect(); // Call logout and redirect if token is invalid
       }
     } catch (error) {
-      console.error('Error refreshing token:', error);
-      this.logoutAndRedirect(); // A separate method to handle logout and redirect
+      console.error('Error validating token:', error);
+      this.logoutAndRedirect(); // Call if there's an error
     }
   },
   methods: {
     logoutAndRedirect() {
       auth.logout(); // Clear cookies
-      this.$router.push('/login'); // Redirect to login page
+      // Check if the current route is not the login route
+      if (this.$route.path !== '/login') {
+        this.$router.push('/login'); // Redirect to login page
+      }
+    },
+    toggleSidebar() {
+      this.collapsed = !this.collapsed;
     },
   },
   components: {
@@ -52,40 +50,27 @@ export default {
       return !hiddenSidebarRoutes.includes(this.$route.path);
     },
   },
-  methods: {
-    toggleSidebar() {
-      this.collapsed = !this.collapsed;
-    },
-  },
 };
-
 </script>
-
 
 <style lang="scss">
 @import '@/styles/scss/variables';
 
-/* Keep your original sidebar and main content styling, with minor adjustments */
 .app-container {
   display: flex;
   transition: all 0.3s ease;
 }
 
-/* Main content takes up remaining space and adjusts based on the sidebar state */
 .main-content {
   flex: 1;
   transition: margin-left 0.3s ease;
 }
 
-/* Adjust margin when the sidebar is visible and not collapsed */
 .with-sidebar {
   margin-left: 150px;
-  /* Match the expanded sidebar width */
 }
 
-/* Adjust margin when the sidebar is collapsed */
 .sidebar-collapsed .with-sidebar {
   margin-left: 50px;
-  /* Match the collapsed sidebar width */
 }
 </style>

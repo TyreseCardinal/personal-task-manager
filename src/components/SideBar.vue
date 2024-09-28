@@ -63,6 +63,8 @@
 </template>
 
 <script>
+import auth from '@/services/auth'; // Ensure you import the auth service
+
 export default {
   props: {
     collapsed: Boolean,
@@ -71,11 +73,15 @@ export default {
     isActive(path) {
       return this.$route.path === path;
     },
-    logout() {
-      this.$cookies.remove('access_token');
-      this.$router.push('/login');
-    }
-  }
+    async logout() {
+      try {
+        await auth.logout(); // Call the logout method from the auth service
+        this.$router.push('/login'); // Redirect to the login page
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+    },
+  },
 };
 </script>
 
