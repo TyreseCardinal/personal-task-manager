@@ -2,32 +2,34 @@
   <div class="timeline-container" :style="{ width: timelineWidth }">
     <div class="timeline">
       <!-- Day Ticks -->
-      <div class="day-tick" v-for="day in days" :key="day" :class="{ today: day === currentDay }">
-        <DayTick :day="day" :isToday="day === currentDay" />
+      <div v-for="day in days" :key="day" class="day-tick">
+        <div :class="['day-tick', { today: day === currentDay }]" @click="goToDay(day)">
+          <div class="day-label">{{ dayNumber(day) }}</div> <!-- Updated to show day and date -->
+        </div>
       </div>
 
       <!-- Event Ticks -->
-      <div class="event-tick" v-for="event in events" :key="event.id" @click="expandEvent(event)"
+      <div v-for="event in events" :key="event.id" @click="expandEvent(event)"
         :style="{ left: calculateEventPosition(event), top: '50px' }">
-        <EventTick :event="event" :isExpanded="event.expanded" />
+        <div :class="['event-tick', { expanded: isExpanded(event.id) }]">
+          <h3>{{ event.title }}</h3>
+          <p>{{ event.event_date }}</p>
+          <div v-if="isExpanded(event.id)" class="event-details">
+            <p>{{ event.description }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-
 <script>
-import DayTick from '@/components/DayTick.vue';
-import EventTick from '@/components/EventTick.vue';
-
 export default {
-  components: {
-    DayTick,
-    EventTick,
-  },
+  name: 'Timeline',
   props: {
     events: Array,
     currentDay: String,
+    expandedEventId: String, // Accept the expanded event ID from TimelineView
   },
   data() {
     return {
@@ -35,6 +37,12 @@ export default {
     };
   },
   methods: {
+    goToDay(day) {
+      this.$emit('day-clicked', day);
+    },
+    expandEvent(event) {
+      this.$emit('expand', event); // Emit the event for expansion handling in TimelineView
+    },
     generateDays() {
       const today = new Date(this.currentDay);
       const days = [];
@@ -45,9 +53,6 @@ export default {
       }
       return days;
     },
-    expandEvent(event) {
-      event.expanded = !event.expanded; // Toggle expanded state
-    },
     calculateEventPosition(event) {
       const eventDate = new Date(event.event_date);
       const currentDate = new Date(this.currentDay);
@@ -55,26 +60,25 @@ export default {
       const dayWidth = 40; // Width of each day tick
       return `${(offsetDays * dayWidth) + 50}px`; // Calculate left position
     },
-  },
-  data() {
-    return {
-      days: this.generateDays(),
-      sidebarWidth: 50, // Default closed width
-      isSidebarOpen: false
-    };
+    dayNumber(day) {
+      const date = new Date(day);
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' }); // Example: "Mon"
+      const dayOfMonth = date.getDate(); // Example: 25
+      return `${dayOfWeek} ${dayOfMonth}`; // Example: "Mon 25"
+    },
+    isExpanded(eventId) {
+      return eventId === this.expandedEventId; // Determine if the event is expanded based on the prop
+    },
   },
   computed: {
     timelineWidth() {
-      // Adjust the timeline's width based on the sidebar
-      const totalWidth = window.innerWidth; // Get the total viewport width
-      const adjustedWidth = this.isSidebarOpen ? totalWidth - 200 : totalWidth - this.sidebarWidth; // Adjust based on sidebar width
-      return `${adjustedWidth}px`;
-    }
-  }
-
+      const totalWidth = window.innerWidth;
+      return `${totalWidth - 50}px`;
+    },
+  },
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '@/styles/scss/Timeline.scss';
 </style>

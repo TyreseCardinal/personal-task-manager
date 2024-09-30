@@ -27,7 +27,7 @@ const router = new Router({
     },
     {
       path: '/timeline',
-      name: 'Timeline',
+      name: 'TimelineView',
       component: TimelineView,
       meta: { requiresAuth: true }
     },

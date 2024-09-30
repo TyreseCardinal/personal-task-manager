@@ -1,6 +1,5 @@
 import axios from '@/plugins/axios';
 import VueCookies from 'vue-cookies';
-import { jwtDecode } from 'jwt-decode'; // Make sure to import jwt-decode
 
 const auth = {
   async login(credentials, rememberMe) {
@@ -18,26 +17,26 @@ const auth = {
   },
 
   storeTokens(accessToken, refreshToken, rememberMe) {
-    const accessTokenExpiry = rememberMe ? '7d' : '1h'; // Set expiry based on rememberMe
+    const accessTokenExpiry = rememberMe ? '7d' : '1d';  // Set expiry based on rememberMe
 
     // Store access token
     VueCookies.set('access_token', accessToken, {
-      expires: accessTokenExpiry,
+      expires: accessTokenExpiry, // 7 days if rememberMe is true, 1 day otherwise
       path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Lax',
+      secure: process.env.NODE_ENV === 'production' ? true : false,  // Disable secure flag for local development
+      sameSite: process.env.NODE_ENV === 'production' ? 'Lax' : 'None',  // Set SameSite to None in development to allow cross-site cookies
     });
 
-    // Store refresh token if rememberMe is checked, otherwise remove it
+    // Store refresh token with a longer expiration if rememberMe is checked
     if (rememberMe) {
       VueCookies.set('refresh_token', refreshToken, {
-        expires: '7d', // Keep refresh token for a week
+        expires: '7d',  // Persist the refresh token for 7 days
         path: '/',
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Lax',
+        secure: process.env.NODE_ENV === 'production' ? true : false,  // Disable secure flag for local development
+        sameSite: process.env.NODE_ENV === 'production' ? 'Lax' : 'None',  // Set SameSite to None in development to allow cross-site cookies
       });
     } else {
-      VueCookies.remove('refresh_token'); // Remove refresh token if not checked
+      VueCookies.remove('refresh_token');  // Remove refresh token if not checked
     }
   },
 
@@ -61,10 +60,10 @@ const auth = {
     }
 
     try {
-      const response = await axios.post('/auth/refresh-token', { refresh_token: refreshToken });
+      const response = await axios.post('/refresh', { refresh_token: refreshToken });
       const { new_access_token } = response.data;
 
-      // Store the new access token
+      // Store the new access token with an appropriate expiration (1 hour)
       VueCookies.set('access_token', new_access_token, {
         expires: '1h',
         path: '/',
@@ -78,6 +77,8 @@ const auth = {
     }
   },
 
+
+  // Add validateAccessToken function
   async validateAccessToken() {
     const accessToken = this.getToken();
     if (accessToken && !this.isTokenExpired(accessToken)) {
@@ -97,7 +98,6 @@ const auth = {
     return false; // No valid access token or refresh token
   },
 
-  // Move isTokenExpired inside the auth object
   isTokenExpired(token) {
     if (!token) return true; // Consider no token as expired
 
@@ -109,8 +109,7 @@ const auth = {
     } catch (error) {
       return true; // In case of an error, treat token as expired
     }
-  }
+  },
 };
 
-// Use default export for the auth object
-export default auth; 
+export default auth;

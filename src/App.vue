@@ -10,7 +10,6 @@
 <script>
 import SideBar from '@/components/SideBar.vue';
 import auth from '@/services/auth.js';
-import { jwtDecode } from 'jwt-decode'; // Ensure this import is correct
 
 export default {
   async created() {
@@ -36,25 +35,25 @@ export default {
       this.collapsed = !this.collapsed;
     },
   },
-  components: {
-    SideBar,
-  },
   data() {
     return {
-      collapsed: true,
+      collapsed: true, // Sidebar initially collapsed
     };
   },
   computed: {
     showSidebar() {
-      const hiddenSidebarRoutes = ['/login', '/signup', '/404'];
-      return !hiddenSidebarRoutes.includes(this.$route.path);
+      const hiddenSidebarRoutes = ['/login', '/register', '/404'];
+      return !hiddenSidebarRoutes.includes(this.$route.path); // Hide sidebar on specific routes
     },
+  },
+  components: {
+    SideBar,
   },
 };
 </script>
 
 <style lang="scss">
-@import '@/styles/scss/variables';
+@import '@/styles/scss/global.scss';
 
 .app-container {
   display: flex;
@@ -64,6 +63,7 @@ export default {
 .main-content {
   flex: 1;
   transition: margin-left 0.3s ease;
+  height: 100vh;
 }
 
 .with-sidebar {
