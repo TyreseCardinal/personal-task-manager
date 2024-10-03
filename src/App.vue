@@ -10,25 +10,25 @@
 <script>
 import SideBar from '@/components/SideBar.vue';
 import auth from '@/services/auth.js';
+import tokenService from '@/services/tokenService';
 
 export default {
   async created() {
     try {
-      const isValid = await auth.validateAccessToken(); // Validate the token
+      const isValid = await auth.validateAccessToken();
       if (!isValid) {
-        this.logoutAndRedirect(); // Call logout and redirect if token is invalid
+        this.logoutAndRedirect();
       }
     } catch (error) {
       console.error('Error validating token:', error);
-      this.logoutAndRedirect(); // Call if there's an error
+      this.logoutAndRedirect();
     }
   },
   methods: {
     logoutAndRedirect() {
-      auth.logout(); // Clear cookies
-      // Check if the current route is not the login route
+      auth.logout();
       if (this.$route.path !== '/login') {
-        this.$router.push('/login'); // Redirect to login page
+        this.$router.push('/login');
       }
     },
     toggleSidebar() {
@@ -37,13 +37,13 @@ export default {
   },
   data() {
     return {
-      collapsed: true, // Sidebar initially collapsed
+      collapsed: true,
     };
   },
   computed: {
     showSidebar() {
       const hiddenSidebarRoutes = ['/login', '/register', '/404'];
-      return !hiddenSidebarRoutes.includes(this.$route.path); // Hide sidebar on specific routes
+      return !hiddenSidebarRoutes.includes(this.$route.path);
     },
   },
   components: {

@@ -39,7 +39,7 @@ export default {
           this.$router.push('/');
         }
       } catch (error) {
-        alert('Error: ' + (error.response?.data.message || 'Invalid credentials'));
+        alert('Error: ' + error.message);
       }
     },
   }
