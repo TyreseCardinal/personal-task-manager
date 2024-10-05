@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import auth from '@/services/auth'; // Ensure you import the auth service
+import auth from '@/services/auth';
 
 export default {
   props: {
@@ -75,8 +75,8 @@ export default {
     },
     async logout() {
       try {
-        await auth.logout(); // Call the logout method from the auth service
-        this.$router.push('/login'); // Redirect to the login page
+        auth.logout();
+        this.$router.push('/login');
       } catch (error) {
         console.error('Logout failed:', error);
       }

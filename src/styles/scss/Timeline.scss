@@ -4,9 +4,8 @@
 
 .timeline {
   display: grid;
-  grid-template-columns: repeat(15, minmax(100px, 1fr));
-  height: 100vh;
-  width: auto;
+  grid-template-columns: auto;
+  grid-auto-flow: column;
   background-color: $beige-color;
 }
 
@@ -44,15 +43,15 @@
 
 .timeline-view {
   padding: 0;
-  display: flex;
-  flex-direction: column;
+
 
   .timeline-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: $darkblue-color;
+    background-color: $navy-color;
+    border-bottom: 4px solid $beige-color;
 
     button {
       margin-right: 10px;
@@ -80,6 +79,18 @@
       font-size: 2.2rem;
       color: $beige-color;
       font-family: 'Poppins', sans-serif;
+      padding: 2px;
+      letter-spacing: 4px;
     }
   }
+}
+
+/* Collapsed sidebar width */
+.sidebar-collapsed .home-view {
+  margin-left: 50px;
+}
+
+/* Expanded sidebar width */
+.app-container:not(.sidebar-collapsed) .home-view {
+  margin-left: 150px;
 }

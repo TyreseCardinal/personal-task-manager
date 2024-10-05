@@ -14,6 +14,8 @@ const auth = {
       }
 
       tokenService.storeTokens(access_token, refresh_token, rememberMe);
+      tokenService.startTokenRefreshTimer(); // Start refresh timer after storing tokens
+
       return response.data;
     } catch (error) {
       console.error('Login error:', error);
@@ -22,9 +24,30 @@ const auth = {
     }
   },
 
+
   async validateAccessToken() {
-    return await tokenService.validateAccessToken();
+    if (!this.isAuthenticated()) { // No need to validate if not authenticated
+      return false;
+    }
+
+    const isAccessTokenValid = await tokenService.validateAccessToken();
+
+    // If access token is not valid, try to refresh the token
+    if (!isAccessTokenValid) {
+      try {
+        await tokenService.refreshToken();
+        return true; // Successfully refreshed, user stays logged in
+      } catch (error) {
+        console.error('Error refreshing token:', error);
+        tokenService.clearTokens(); // Clear tokens on failure to refresh
+        return false; // Token refresh failed, redirect to login
+      }
+    }
+
+    return isAccessTokenValid;
   },
+
+
 
   logout() {
     tokenService.clearTokens();

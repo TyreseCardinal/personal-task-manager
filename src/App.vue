@@ -64,13 +64,9 @@ export default {
   flex: 1;
   transition: margin-left 0.3s ease;
   height: 100vh;
-}
-
-.with-sidebar {
-  margin-left: 150px;
-}
-
-.sidebar-collapsed .with-sidebar {
-  margin-left: 50px;
+  max-width: 100%;
+  width: 90%;
+  overflow-x: hidden;
+  font-family: 'Poppins' sans-serif;
 }
 </style>
