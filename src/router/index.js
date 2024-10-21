@@ -4,7 +4,10 @@ import HomeView from '@/views/HomeView.vue';
 import Login from '@/views/Login.vue';
 import Profile from '@/views/Profile.vue';
 import Register from '@/views/Register.vue';
-import TimelineView from '@/views/TimelineView.vue';
+import TimelineCalendarView from '@/views/TimelineCalendarView.vue';  // Updated import to use new page
+import TaskList from '@/components/TaskList.vue';
+import ToDoList from '@/views/ToDoList.vue';
+import axios from '@/plugins/axios';  // Import your axios instance
 
 Vue.use(Router);
 
@@ -26,9 +29,27 @@ const router = new Router({
       meta: { hideSidebar: true }
     },
     {
+      path: '/register',
+      name: 'Register',
+      component: Register,
+      meta: { hideSidebar: true }
+    },
+    {
+      path: '/timeline-calendar',
+      name: 'TimelineCalendarView',
+      component: TimelineCalendarView,
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/timeline',
-      name: 'TimelineView',
-      component: TimelineView,
+      name: 'Timeline',
+      component: TimelineCalendarView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/tasks',
+      name: 'Tasks',
+      component: ToDoList,
       meta: { requiresAuth: true }
     },
     {
@@ -38,38 +59,10 @@ const router = new Router({
       meta: { requiresAuth: true }
     },
     {
-      path: '/register',
-      name: 'Register',
-      component: Register,
-      meta: { hideSidebar: true }
-    },
-    {
       path: '*',
-      redirect: '/'
+      redirect: '/' // Redirect any unknown routes to home
     }
   ]
-});
-
-
-// Navigation Guard
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = Vue.$cookies.get('access_token'); // Checking if the auth token cookie exists
-
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!isAuthenticated) {
-      next({ name: 'Login' }); // Redirect to login page if not authenticated
-    } else {
-      next(); // Proceed to the route if authenticated
-    }
-  } else {
-    next(); // If route does not require authentication, proceed
-  };
-  if (to.name === 'Login' && isAuthenticated) {
-    // If the user is logged in and tries to access the login page, redirect to home/dashboard
-    next({ name: 'Home' }); // Redirect to dashboard or home page if already authenticated
-  } else {
-    next(); // Otherwise, proceed to the next route
-  }
 });
 
 

@@ -23,11 +23,7 @@ export default {
   methods: {
     async fetchTasks() {
       try {
-        const response = await axios.get('/api/tasks', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        const response = await axios.get('/api/tasks');
         this.tasks = response.data;
       } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -35,11 +31,7 @@ export default {
     },
     async deleteTask(taskId) {
       try {
-        await axios.delete(`/api/tasks/${taskId}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        await axios.delete(`/api/tasks/${taskId}`);
         this.fetchTasks(); // Refresh task list after deletion
       } catch (error) {
         console.error('Error deleting task:', error);

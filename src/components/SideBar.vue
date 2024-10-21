@@ -13,21 +13,25 @@
         <span class="sidebar-text" v-if="!collapsed">Home</span>
       </router-link>
 
+      <!-- Tasks -->
       <router-link to="/tasks" class="sidebar-link" :class="{ active: isActive('/tasks') }">
         <i :class="['mdi', 'mdi-format-list-checks']" class="icon" />
         <span class="sidebar-text" v-if="!collapsed">Tasks</span>
       </router-link>
 
+      <!-- Projects -->
       <router-link to="/projects" class="sidebar-link" :class="{ active: isActive('/projects') }">
         <i :class="['mdi', 'mdi-folder-outline']" class="icon" />
         <span class="sidebar-text" v-if="!collapsed">Projects</span>
       </router-link>
 
+      <!-- Timeline -->
       <router-link to="/timeline" class="sidebar-link" :class="{ active: isActive('/timeline') }">
         <i :class="['mdi', 'mdi-chart-timeline-variant']" class="icon" />
         <span class="sidebar-text" v-if="!collapsed">Timeline</span>
       </router-link>
 
+      <!-- Calendar -->
       <router-link to="/calendar" class="sidebar-link" :class="{ active: isActive('/calendar') }">
         <i :class="['mdi', 'mdi-calendar-month']" class="icon" />
         <span class="sidebar-text" v-if="!collapsed">Calendar</span>
@@ -75,10 +79,12 @@ export default {
     },
     async logout() {
       try {
-        auth.logout();
-        this.$router.push('/login');
+        await axios.post('/auth/logout'); // Call your logout API endpoint
+        localStorage.removeItem('access_token'); // Clear the access token from localStorage
+        this.$route.push('/login');
       } catch (error) {
-        console.error('Logout failed:', error);
+        console.error('Logout error:', error);
+        // Optionally handle the error (show a message to the user)
       }
     },
   },

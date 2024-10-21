@@ -2,8 +2,9 @@
   <main class="login-container">
     <h1>Login</h1>
     <form @submit.prevent="login">
-      <input id="login-email" v-model="email" type="email" placeholder="Email" />
-      <input id="login-password" v-model="password" type="password" placeholder="Password" />
+      <input id="login-email" v-model="email" type="email" placeholder="Email" autocomplete="email">
+      <input id="login-password" v-model="password" type="password" placeholder="Password"
+        autocomplete="current-password">
       <button type="submit">Login</button>
       <label>
         <input id="login-checkbox" type="checkbox" v-model="rememberMe"> Keep me signed in
@@ -24,7 +25,7 @@ export default {
     return {
       email: '',
       password: '',
-      rememberMe: false,
+      rememberMe: false, // RememberMe is still here to send to backend
     };
   },
   methods: {
@@ -33,10 +34,13 @@ export default {
         const response = await auth.login({
           email: this.email,
           password: this.password,
-        }, this.rememberMe);
+          rememberMe: this.rememberMe,
+        });
 
-        if (response) {
-          this.$router.push('/');
+        if (response === 200) {
+          this.$router.push('/home');
+        } else {
+
         }
       } catch (error) {
         alert('Error: ' + error.message);
