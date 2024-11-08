@@ -1,5 +1,28 @@
-.home-view {
-  box-sizing: border-box;
-  background-color: $maroon-color;
-  height: 100%;
+// Variables for sidebar widths
+$sidebar-collapsed-width: 50px;
+$sidebar-expanded-width: 150px;
+
+// Main content styles
+.main-content {
+  transition: width 0.3s ease;
+
+  // When sidebar is collapsed
+  &.sidebar-collapsed {
+    width: calc(100% - #{$sidebar-collapsed-width});
+  }
+
+  // When sidebar is expanded
+  &.sidebar-expanded {
+    width: calc(100% - #{$sidebar-expanded-width});
+  }
+}
+
+// Sidebar styles
+.sidebar {
+  width: $sidebar-collapsed-width;
+  transition: width 0.3s ease;
+
+  &.expanded {
+    width: $sidebar-expanded-width;
+  }
 }
